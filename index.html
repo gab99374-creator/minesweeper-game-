@@ -81,13 +81,10 @@ select {
 #board {
     display: grid;
     gap: 5px;
-
     width: fit-content;
     max-width: 100%;
-
     margin: auto;
     padding: 7px;
-
     background: #080d16;
     border-radius: 12px;
 }
@@ -133,9 +130,7 @@ select {
     font-weight: bold;
 }
 
-/* =========================
-   RAINBOW GAME OVER
-========================= */
+/* RAINBOW GAME OVER */
 
 #gameOver {
     position: fixed;
@@ -302,6 +297,12 @@ select {
 </div>
 
 
+<!-- GAME OVER SOUND -->
+<audio id="gameOverSound" preload="auto">
+    <source src="gameover.mp3" type="audio/mpeg">
+</audio>
+
+
 <!-- GAME OVER SCREEN -->
 
 <div id="gameOver">
@@ -359,6 +360,9 @@ const gameOverElement =
 const messageElement =
     document.getElementById("message");
 
+const gameOverSound =
+    document.getElementById("gameOverSound");
+
 
 let rows;
 let cols;
@@ -376,10 +380,6 @@ let timer = 0;
 let timerInterval;
 
 
-/* =========================
-   EMOJIS
-========================= */
-
 const emojis = [
     "😀",
     "😎",
@@ -395,10 +395,6 @@ const emojis = [
     "🤡"
 ];
 
-
-/* =========================
-   LEVEL
-========================= */
 
 function setupLevel() {
 
@@ -431,10 +427,6 @@ function setupLevel() {
 }
 
 
-/* =========================
-   START GAME
-========================= */
-
 function startGame() {
 
     clearInterval(timerInterval);
@@ -460,6 +452,10 @@ function startGame() {
 
     gameOverElement.style.display =
         "none";
+
+
+    gameOverSound.pause();
+    gameOverSound.currentTime = 0;
 
 
     for (let r = 0; r < rows; r++) {
@@ -493,10 +489,6 @@ function startGame() {
     createBoard();
 }
 
-
-/* =========================
-   CREATE BOARD
-========================= */
 
 function createBoard() {
 
@@ -540,10 +532,6 @@ function createBoard() {
 }
 
 
-/* =========================
-   PLACE MINES
-========================= */
-
 function placeMines(safeR, safeC) {
 
     let placed = 0;
@@ -577,10 +565,6 @@ function placeMines(safeR, safeC) {
 
 }
 
-
-/* =========================
-   REVEAL
-========================= */
 
 function reveal(r, c) {
 
@@ -647,10 +631,6 @@ function reveal(r, c) {
 }
 
 
-/* =========================
-   FLAG
-========================= */
-
 function flagCell(r, c) {
 
     if (gameOver)
@@ -687,10 +667,6 @@ function flagCell(r, c) {
 
 }
 
-
-/* =========================
-   RENDER
-========================= */
 
 function renderBoard() {
 
@@ -771,10 +747,6 @@ function renderBoard() {
 }
 
 
-/* =========================
-   GAME OVER
-========================= */
-
 function loseGame() {
 
     gameOver = true;
@@ -782,7 +754,7 @@ function loseGame() {
     clearInterval(timerInterval);
 
 
-    /* Reveal everything */
+    /* Reveal all tiles */
 
     for (let r = 0; r < rows; r++) {
 
@@ -803,21 +775,24 @@ function loseGame() {
         "💥 BOOM!";
 
 
-    /* Rainbow prank screen */
+    /* Play sound */
+
+    gameOverSound.currentTime = 0;
+
+    gameOverSound.play().catch(() => {});
+
+
+    /* Rainbow prank */
 
     setTimeout(() => {
 
         gameOverElement.style.display =
             "flex";
 
-    }, 500);
+    }, 300);
 
 }
 
-
-/* =========================
-   WIN
-========================= */
 
 function winGame() {
 
@@ -830,10 +805,6 @@ function winGame() {
 
 }
 
-
-/* =========================
-   BUTTONS
-========================= */
 
 restartButton.addEventListener(
     "click",
@@ -853,11 +824,9 @@ levelElement.addEventListener(
 );
 
 
-/* START */
-
 startGame();
 
 </script>
 
 </body>
-    </html>
+</html>
